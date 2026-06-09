@@ -7,6 +7,7 @@ export type EditorFrame = Transform & {
   processedUrl: string | null;
   width: number | null;
   height: number | null;
+  locked: boolean;
 };
 
 export type EditorTimelapse = {

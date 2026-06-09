@@ -16,13 +16,14 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
 type Documents = {
     "query Me {\n  me\n}": typeof types.MeDocument,
     "\n  query MyTimelapses {\n    myTimelapses {\n      id\n      title\n      canvasWidth\n      canvasHeight\n      gifDelayMs\n      updatedAt\n    }\n  }\n": typeof types.MyTimelapsesDocument,
-    "\n  query Timelapse($id: ID!) {\n    timelapse(id: $id) {\n      id\n      title\n      canvasWidth\n      canvasHeight\n      gifDelayMs\n      frames {\n        id\n        orderIndex\n        originalUrl\n        processedUrl\n        rotation\n        scale\n        offsetX\n        offsetY\n        width\n        height\n      }\n    }\n  }\n": typeof types.TimelapseDocument,
+    "\n  query Timelapse($id: ID!) {\n    timelapse(id: $id) {\n      id\n      title\n      canvasWidth\n      canvasHeight\n      gifDelayMs\n      frames {\n        id\n        orderIndex\n        originalUrl\n        processedUrl\n        rotation\n        scale\n        offsetX\n        offsetY\n        width\n        height\n        locked\n      }\n    }\n  }\n": typeof types.TimelapseDocument,
     "\n  mutation CreateTimelapse($input: CreateTimelapseInput!) {\n    createTimelapse(input: $input) {\n      id\n    }\n  }\n": typeof types.CreateTimelapseDocument,
     "\n  mutation RenameTimelapse($id: ID!, $title: String!) {\n    renameTimelapse(id: $id, title: $title) {\n      id\n      title\n    }\n  }\n": typeof types.RenameTimelapseDocument,
     "\n  mutation DeleteTimelapse($id: ID!) {\n    deleteTimelapse(id: $id)\n  }\n": typeof types.DeleteTimelapseDocument,
     "\n  mutation PresignUpload($input: PresignUploadInput!) {\n    presignUpload(input: $input) {\n      url\n      key\n    }\n  }\n": typeof types.PresignUploadDocument,
-    "\n  mutation CreateFrame($input: CreateFrameInput!) {\n    createFrame(input: $input) {\n      id\n      orderIndex\n      originalUrl\n      processedUrl\n      rotation\n      scale\n      offsetX\n      offsetY\n      width\n      height\n    }\n  }\n": typeof types.CreateFrameDocument,
+    "\n  mutation CreateFrame($input: CreateFrameInput!) {\n    createFrame(input: $input) {\n      id\n      orderIndex\n      originalUrl\n      processedUrl\n      rotation\n      scale\n      offsetX\n      offsetY\n      width\n      height\n      locked\n    }\n  }\n": typeof types.CreateFrameDocument,
     "\n  mutation SaveFrameTransform($input: SaveFrameTransformInput!) {\n    saveFrameTransform(input: $input) {\n      id\n      rotation\n      scale\n      offsetX\n      offsetY\n      processedUrl\n    }\n  }\n": typeof types.SaveFrameTransformDocument,
+    "\n  mutation SetFrameLocked($id: ID!, $locked: Boolean!) {\n    setFrameLocked(id: $id, locked: $locked) {\n      id\n      locked\n    }\n  }\n": typeof types.SetFrameLockedDocument,
     "\n  mutation ReorderFrames($timelapseId: ID!, $orderedIds: [ID!]!) {\n    reorderFrames(timelapseId: $timelapseId, orderedIds: $orderedIds) {\n      id\n      orderIndex\n    }\n  }\n": typeof types.ReorderFramesDocument,
     "\n  mutation DeleteFrame($id: ID!) {\n    deleteFrame(id: $id)\n  }\n": typeof types.DeleteFrameDocument,
     "\n  mutation UpdateGifDelay($id: ID!, $gifDelayMs: Int!) {\n    updateGifDelay(id: $id, gifDelayMs: $gifDelayMs) {\n      id\n      gifDelayMs\n    }\n  }\n": typeof types.UpdateGifDelayDocument,
@@ -31,13 +32,14 @@ type Documents = {
 const documents: Documents = {
     "query Me {\n  me\n}": types.MeDocument,
     "\n  query MyTimelapses {\n    myTimelapses {\n      id\n      title\n      canvasWidth\n      canvasHeight\n      gifDelayMs\n      updatedAt\n    }\n  }\n": types.MyTimelapsesDocument,
-    "\n  query Timelapse($id: ID!) {\n    timelapse(id: $id) {\n      id\n      title\n      canvasWidth\n      canvasHeight\n      gifDelayMs\n      frames {\n        id\n        orderIndex\n        originalUrl\n        processedUrl\n        rotation\n        scale\n        offsetX\n        offsetY\n        width\n        height\n      }\n    }\n  }\n": types.TimelapseDocument,
+    "\n  query Timelapse($id: ID!) {\n    timelapse(id: $id) {\n      id\n      title\n      canvasWidth\n      canvasHeight\n      gifDelayMs\n      frames {\n        id\n        orderIndex\n        originalUrl\n        processedUrl\n        rotation\n        scale\n        offsetX\n        offsetY\n        width\n        height\n        locked\n      }\n    }\n  }\n": types.TimelapseDocument,
     "\n  mutation CreateTimelapse($input: CreateTimelapseInput!) {\n    createTimelapse(input: $input) {\n      id\n    }\n  }\n": types.CreateTimelapseDocument,
     "\n  mutation RenameTimelapse($id: ID!, $title: String!) {\n    renameTimelapse(id: $id, title: $title) {\n      id\n      title\n    }\n  }\n": types.RenameTimelapseDocument,
     "\n  mutation DeleteTimelapse($id: ID!) {\n    deleteTimelapse(id: $id)\n  }\n": types.DeleteTimelapseDocument,
     "\n  mutation PresignUpload($input: PresignUploadInput!) {\n    presignUpload(input: $input) {\n      url\n      key\n    }\n  }\n": types.PresignUploadDocument,
-    "\n  mutation CreateFrame($input: CreateFrameInput!) {\n    createFrame(input: $input) {\n      id\n      orderIndex\n      originalUrl\n      processedUrl\n      rotation\n      scale\n      offsetX\n      offsetY\n      width\n      height\n    }\n  }\n": types.CreateFrameDocument,
+    "\n  mutation CreateFrame($input: CreateFrameInput!) {\n    createFrame(input: $input) {\n      id\n      orderIndex\n      originalUrl\n      processedUrl\n      rotation\n      scale\n      offsetX\n      offsetY\n      width\n      height\n      locked\n    }\n  }\n": types.CreateFrameDocument,
     "\n  mutation SaveFrameTransform($input: SaveFrameTransformInput!) {\n    saveFrameTransform(input: $input) {\n      id\n      rotation\n      scale\n      offsetX\n      offsetY\n      processedUrl\n    }\n  }\n": types.SaveFrameTransformDocument,
+    "\n  mutation SetFrameLocked($id: ID!, $locked: Boolean!) {\n    setFrameLocked(id: $id, locked: $locked) {\n      id\n      locked\n    }\n  }\n": types.SetFrameLockedDocument,
     "\n  mutation ReorderFrames($timelapseId: ID!, $orderedIds: [ID!]!) {\n    reorderFrames(timelapseId: $timelapseId, orderedIds: $orderedIds) {\n      id\n      orderIndex\n    }\n  }\n": types.ReorderFramesDocument,
     "\n  mutation DeleteFrame($id: ID!) {\n    deleteFrame(id: $id)\n  }\n": types.DeleteFrameDocument,
     "\n  mutation UpdateGifDelay($id: ID!, $gifDelayMs: Int!) {\n    updateGifDelay(id: $id, gifDelayMs: $gifDelayMs) {\n      id\n      gifDelayMs\n    }\n  }\n": types.UpdateGifDelayDocument,
@@ -69,7 +71,7 @@ export function graphql(source: "\n  query MyTimelapses {\n    myTimelapses {\n 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Timelapse($id: ID!) {\n    timelapse(id: $id) {\n      id\n      title\n      canvasWidth\n      canvasHeight\n      gifDelayMs\n      frames {\n        id\n        orderIndex\n        originalUrl\n        processedUrl\n        rotation\n        scale\n        offsetX\n        offsetY\n        width\n        height\n      }\n    }\n  }\n"): (typeof documents)["\n  query Timelapse($id: ID!) {\n    timelapse(id: $id) {\n      id\n      title\n      canvasWidth\n      canvasHeight\n      gifDelayMs\n      frames {\n        id\n        orderIndex\n        originalUrl\n        processedUrl\n        rotation\n        scale\n        offsetX\n        offsetY\n        width\n        height\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query Timelapse($id: ID!) {\n    timelapse(id: $id) {\n      id\n      title\n      canvasWidth\n      canvasHeight\n      gifDelayMs\n      frames {\n        id\n        orderIndex\n        originalUrl\n        processedUrl\n        rotation\n        scale\n        offsetX\n        offsetY\n        width\n        height\n        locked\n      }\n    }\n  }\n"): (typeof documents)["\n  query Timelapse($id: ID!) {\n    timelapse(id: $id) {\n      id\n      title\n      canvasWidth\n      canvasHeight\n      gifDelayMs\n      frames {\n        id\n        orderIndex\n        originalUrl\n        processedUrl\n        rotation\n        scale\n        offsetX\n        offsetY\n        width\n        height\n        locked\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -89,11 +91,15 @@ export function graphql(source: "\n  mutation PresignUpload($input: PresignUploa
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation CreateFrame($input: CreateFrameInput!) {\n    createFrame(input: $input) {\n      id\n      orderIndex\n      originalUrl\n      processedUrl\n      rotation\n      scale\n      offsetX\n      offsetY\n      width\n      height\n    }\n  }\n"): (typeof documents)["\n  mutation CreateFrame($input: CreateFrameInput!) {\n    createFrame(input: $input) {\n      id\n      orderIndex\n      originalUrl\n      processedUrl\n      rotation\n      scale\n      offsetX\n      offsetY\n      width\n      height\n    }\n  }\n"];
+export function graphql(source: "\n  mutation CreateFrame($input: CreateFrameInput!) {\n    createFrame(input: $input) {\n      id\n      orderIndex\n      originalUrl\n      processedUrl\n      rotation\n      scale\n      offsetX\n      offsetY\n      width\n      height\n      locked\n    }\n  }\n"): (typeof documents)["\n  mutation CreateFrame($input: CreateFrameInput!) {\n    createFrame(input: $input) {\n      id\n      orderIndex\n      originalUrl\n      processedUrl\n      rotation\n      scale\n      offsetX\n      offsetY\n      width\n      height\n      locked\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation SaveFrameTransform($input: SaveFrameTransformInput!) {\n    saveFrameTransform(input: $input) {\n      id\n      rotation\n      scale\n      offsetX\n      offsetY\n      processedUrl\n    }\n  }\n"): (typeof documents)["\n  mutation SaveFrameTransform($input: SaveFrameTransformInput!) {\n    saveFrameTransform(input: $input) {\n      id\n      rotation\n      scale\n      offsetX\n      offsetY\n      processedUrl\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation SetFrameLocked($id: ID!, $locked: Boolean!) {\n    setFrameLocked(id: $id, locked: $locked) {\n      id\n      locked\n    }\n  }\n"): (typeof documents)["\n  mutation SetFrameLocked($id: ID!, $locked: Boolean!) {\n    setFrameLocked(id: $id, locked: $locked) {\n      id\n      locked\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

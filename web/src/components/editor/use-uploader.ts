@@ -90,6 +90,7 @@ export function useUploader(
             offsetY: c.offsetY,
             width: c.width ?? null,
             height: c.height ?? null,
+            locked: c.locked,
           });
           setProgress({ done: i + 1, total: files.length });
         }

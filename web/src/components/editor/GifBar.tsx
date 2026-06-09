@@ -92,6 +92,7 @@ export function GifBar({
           <img
             src={current.processedUrl ?? current.originalUrl}
             alt=""
+            crossOrigin="anonymous"
             className="h-full w-full object-contain"
           />
         )}

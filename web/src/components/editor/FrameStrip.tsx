@@ -9,6 +9,7 @@ type Props = {
   onSelect: (id: string) => void;
   onReorder: (orderedIds: string[]) => void;
   onDelete: (id: string) => void;
+  onToggleLock: (id: string) => void;
   onAdd: () => void;
   busy: boolean;
   progress: { done: number; total: number } | null;
@@ -20,6 +21,7 @@ export function FrameStrip({
   onSelect,
   onReorder,
   onDelete,
+  onToggleLock,
   onAdd,
   busy,
   progress,
@@ -66,7 +68,9 @@ export function FrameStrip({
               ? 'ring-2 ring-blue-500'
               : overId === frame.id
                 ? 'ring-2 ring-blue-300'
-                : ''
+                : frame.locked
+                  ? 'ring-2 ring-amber-400/70'
+                  : ''
           }`}
           title="Drag to reorder"
         >
@@ -79,6 +83,7 @@ export function FrameStrip({
             <img
               src={frame.processedUrl ?? frame.originalUrl}
               alt={`Frame ${i + 1}`}
+              crossOrigin="anonymous"
               draggable={false}
               className="h-full w-full object-cover"
             />
@@ -93,6 +98,18 @@ export function FrameStrip({
             title="Delete frame"
           >
             ✕
+          </button>
+          <button
+            type="button"
+            onClick={() => onToggleLock(frame.id)}
+            className={`absolute bottom-1 right-1 rounded bg-black/70 px-1 text-[11px] leading-tight ${
+              frame.locked
+                ? 'block text-amber-300'
+                : 'hidden text-white group-hover:block'
+            }`}
+            title={frame.locked ? 'Unlock alignment' : 'Lock alignment'}
+          >
+            {frame.locked ? '🔒' : '🔓'}
           </button>
         </div>
       ))}

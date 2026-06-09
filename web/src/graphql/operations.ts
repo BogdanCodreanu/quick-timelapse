@@ -32,6 +32,7 @@ export const TimelapseQuery = graphql(`
         offsetY
         width
         height
+        locked
       }
     }
   }
@@ -82,6 +83,7 @@ export const CreateFrameMutation = graphql(`
       offsetY
       width
       height
+      locked
     }
   }
 `);
@@ -95,6 +97,15 @@ export const SaveFrameTransformMutation = graphql(`
       offsetX
       offsetY
       processedUrl
+    }
+  }
+`);
+
+export const SetFrameLockedMutation = graphql(`
+  mutation SetFrameLocked($id: ID!, $locked: Boolean!) {
+    setFrameLocked(id: $id, locked: $locked) {
+      id
+      locked
     }
   }
 `);

@@ -21,6 +21,7 @@ type Frame {
   cropY: Float
   height: Int
   id: ID!
+  locked: Boolean!
   offsetX: Float!
   offsetY: Float!
   orderIndex: Int!
@@ -43,6 +44,7 @@ type Mutation {
   renameTimelapse(id: ID!, title: String!): Timelapse!
   reorderFrames(orderedIds: [ID!]!, timelapseId: ID!): [Frame!]!
   saveFrameTransform(input: SaveFrameTransformInput!): Frame!
+  setFrameLocked(id: ID!, locked: Boolean!): Frame!
   updateCanvas(canvasHeight: Int!, canvasWidth: Int!, id: ID!): Timelapse!
   updateGifDelay(gifDelayMs: Int!, id: ID!): Timelapse!
 }

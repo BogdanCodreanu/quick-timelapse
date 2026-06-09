@@ -275,6 +275,23 @@ export function registerMutations() {
         },
       }),
 
+      // Lock/unlock a frame to protect its alignment from accidental edits.
+      setFrameLocked: t.prismaField({
+        type: 'Frame',
+        args: {
+          id: t.arg.id({ required: true }),
+          locked: t.arg.boolean({ required: true }),
+        },
+        resolve: async (query, _root, args, ctx) => {
+          await assertOwnsFrame(ctx, String(args.id));
+          return ctx.prisma.frame.update({
+            ...query,
+            where: { id: String(args.id) },
+            data: { locked: args.locked },
+          });
+        },
+      }),
+
       reorderFrames: t.prismaField({
         type: ['Frame'],
         args: {

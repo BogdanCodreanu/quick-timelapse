@@ -9,6 +9,7 @@ import {
   RenameTimelapseMutation,
   ReorderFramesMutation,
   SaveFrameTransformMutation,
+  SetFrameLockedMutation,
   UpdateCanvasMutation,
   UpdateGifDelayMutation,
 } from '@/graphql/operations';
@@ -46,6 +47,7 @@ export function TimelapseEditor({ timelapse }: { timelapse: EditorTimelapse }) {
   const [, saveTransform] = useMutation(SaveFrameTransformMutation);
   const [, deleteFrameMut] = useMutation(DeleteFrameMutation);
   const [, reorderMut] = useMutation(ReorderFramesMutation);
+  const [, setFrameLockedMut] = useMutation(SetFrameLockedMutation);
   const [, updateGifDelay] = useMutation(UpdateGifDelayMutation);
   const [, updateCanvasMut] = useMutation(UpdateCanvasMutation);
   const [, renameMut] = useMutation(RenameTimelapseMutation);
@@ -156,13 +158,13 @@ export function TimelapseEditor({ timelapse }: { timelapse: EditorTimelapse }) {
   const onion = activeIndex > 0 ? frames[activeIndex - 1] : null;
 
   function handleTransform(t: Transform) {
-    if (!activeId) return;
+    if (!activeId || active?.locked) return;
     setFrames((prev) => prev.map((f) => (f.id === activeId ? { ...f, ...t } : f)));
     scheduleSave(activeId);
   }
 
   function handleReset() {
-    if (!activeId) return;
+    if (!activeId || active?.locked) return;
     setFrames((prev) =>
       prev.map((f) =>
         f.id === activeId
@@ -171,6 +173,14 @@ export function TimelapseEditor({ timelapse }: { timelapse: EditorTimelapse }) {
       ),
     );
     scheduleSave(activeId);
+  }
+
+  function toggleLock(id: string) {
+    const cur = framesRef.current.find((f) => f.id === id);
+    if (!cur) return;
+    const locked = !cur.locked;
+    setFrames((prev) => prev.map((f) => (f.id === id ? { ...f, locked } : f)));
+    void setFrameLockedMut({ id, locked });
   }
 
   function selectFrame(id: string) {
@@ -282,6 +292,7 @@ export function TimelapseEditor({ timelapse }: { timelapse: EditorTimelapse }) {
             onion={onion}
             onionOpacity={onionOpacity}
             onTransform={handleTransform}
+            onOnionOpacity={setOnionOpacity}
           />
         </section>
 
@@ -303,6 +314,7 @@ export function TimelapseEditor({ timelapse }: { timelapse: EditorTimelapse }) {
             onReset={handleReset}
             onApply={() => void flush()}
             onDelete={() => active && handleDelete(active.id)}
+            onToggleLock={() => active && toggleLock(active.id)}
             saveStatus={saveStatus}
           />
         </aside>
@@ -334,6 +346,7 @@ export function TimelapseEditor({ timelapse }: { timelapse: EditorTimelapse }) {
             onSelect={selectFrame}
             onReorder={handleReorder}
             onDelete={handleDelete}
+            onToggleLock={toggleLock}
             onAdd={openPicker}
             busy={busy}
             progress={progress}

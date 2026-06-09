@@ -12,6 +12,7 @@ type Props = {
   onReset: () => void;
   onApply: () => void;
   onDelete: () => void;
+  onToggleLock: () => void;
   saveStatus: 'idle' | 'saving' | 'saved' | 'error';
 };
 
@@ -27,9 +28,11 @@ export function TransformControls({
   onReset,
   onApply,
   onDelete,
+  onToggleLock,
   saveStatus,
 }: Props) {
   const a = active;
+  const locked = !!a?.locked;
   const set = (patch: Partial<Transform>) => {
     if (!a) return;
     onTransform({
@@ -43,6 +46,20 @@ export function TransformControls({
 
   return (
     <div className="flex flex-col gap-4 text-sm">
+      <button
+        type="button"
+        onClick={onToggleLock}
+        disabled={!a}
+        className={`flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium disabled:opacity-40 ${
+          locked
+            ? 'border-amber-500/60 bg-amber-500/15 text-amber-700 dark:text-amber-300'
+            : 'border-black/15 dark:border-white/20'
+        }`}
+        title="Lock this frame's alignment so it can't be moved, rotated, or zoomed by accident"
+      >
+        {locked ? '🔒 Locked — click to unlock' : '🔓 Lock alignment'}
+      </button>
+
       <label className="flex flex-col gap-1">
         <span>
           Onion-skin{hasOnion ? '' : ' (no previous frame)'} ·{' '}
@@ -67,7 +84,7 @@ export function TransformControls({
           max={180}
           step={1}
           value={a?.rotation ?? 0}
-          disabled={!a}
+          disabled={!a || locked}
           onChange={(e) => set({ rotation: Number(e.target.value) })}
         />
       </label>
@@ -77,7 +94,7 @@ export function TransformControls({
         <button
           type="button"
           className={btn}
-          disabled={!a}
+          disabled={!a || locked}
           onClick={() => set({ scale: Math.max(0.05, (a?.scale ?? 1) * 0.9) })}
         >
           −
@@ -88,7 +105,7 @@ export function TransformControls({
         <button
           type="button"
           className={btn}
-          disabled={!a}
+          disabled={!a || locked}
           onClick={() => set({ scale: Math.min(20, (a?.scale ?? 1) * 1.1) })}
         >
           ＋
@@ -96,7 +113,12 @@ export function TransformControls({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <button type="button" className={btn} disabled={!a} onClick={onReset}>
+        <button
+          type="button"
+          className={btn}
+          disabled={!a || locked}
+          onClick={onReset}
+        >
           Reset
         </button>
         <button type="button" className={btn} disabled={!a} onClick={onApply}>
@@ -122,8 +144,8 @@ export function TransformControls({
               : ''}
       </p>
       <p className="text-xs text-zinc-400">
-        Drag to move · scroll to zoom. The black frame is the crop — anything
-        outside it is cropped in the GIF.
+        Drag to move · scroll to zoom · <b>Ctrl+drag</b> to rotate ·{' '}
+        <b>Ctrl+scroll</b> to fade the onion-skin. The frame edge is the crop.
       </p>
     </div>
   );

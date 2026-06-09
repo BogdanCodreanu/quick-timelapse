@@ -31,6 +31,7 @@ export default async function TimelapsePage({
       offsetY: f.offsetY,
       width: f.width ?? null,
       height: f.height ?? null,
+      locked: f.locked,
     })),
   };
 

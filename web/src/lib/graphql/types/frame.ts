@@ -18,6 +18,7 @@ export function registerFrameType() {
       offsetY: t.exposeFloat('offsetY'),
       width: t.exposeInt('width', { nullable: true }),
       height: t.exposeInt('height', { nullable: true }),
+      locked: t.exposeBoolean('locked'),
       createdAt: t.expose('createdAt', { type: 'DateTime' }),
       updatedAt: t.expose('updatedAt', { type: 'DateTime' }),
 

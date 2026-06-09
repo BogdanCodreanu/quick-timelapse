@@ -44,6 +44,9 @@ model Frame {
   offsetX  Float @default(0)
   offsetY  Float @default(0)
 
+  // User-locked: the editor ignores accidental transform edits while true.
+  locked Boolean @default(false)
+
   // Natural pixel size of the original (EXIF-corrected)
   width  Int?
   height Int?
