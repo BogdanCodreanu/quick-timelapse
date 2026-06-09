@@ -1,0 +1,91 @@
+input CreateFrameInput {
+  height: Int
+  originalKey: String!
+  timelapseId: ID!
+  width: Int
+}
+
+input CreateTimelapseInput {
+  canvasHeight: Int
+  canvasWidth: Int
+  title: String
+}
+
+scalar DateTime
+
+type Frame {
+  createdAt: DateTime!
+  cropH: Float
+  cropW: Float
+  cropX: Float
+  cropY: Float
+  height: Int
+  id: ID!
+  offsetX: Float!
+  offsetY: Float!
+  orderIndex: Int!
+  originalKey: String!
+  originalUrl: String!
+  processedKey: String
+  processedUrl: String
+  rotation: Float!
+  scale: Float!
+  updatedAt: DateTime!
+  width: Int
+}
+
+type Mutation {
+  createFrame(input: CreateFrameInput!): Frame!
+  createTimelapse(input: CreateTimelapseInput!): Timelapse!
+  deleteFrame(id: ID!): Boolean!
+  deleteTimelapse(id: ID!): Boolean!
+  presignUpload(input: PresignUploadInput!): PresignedUpload!
+  renameTimelapse(id: ID!, title: String!): Timelapse!
+  reorderFrames(orderedIds: [ID!]!, timelapseId: ID!): [Frame!]!
+  saveFrameTransform(input: SaveFrameTransformInput!): Frame!
+  updateCanvas(canvasHeight: Int!, canvasWidth: Int!, id: ID!): Timelapse!
+  updateGifDelay(gifDelayMs: Int!, id: ID!): Timelapse!
+}
+
+input PresignUploadInput {
+  contentType: String!
+  frameId: ID
+  kind: UploadKind!
+  timelapseId: ID!
+}
+
+type PresignedUpload {
+  key: String!
+  url: String!
+}
+
+type Query {
+  me: String
+  myTimelapses: [Timelapse!]!
+  timelapse(id: ID!): Timelapse
+}
+
+input SaveFrameTransformInput {
+  frameId: ID!
+  offsetX: Float!
+  offsetY: Float!
+  processedKey: String
+  rotation: Float!
+  scale: Float!
+}
+
+type Timelapse {
+  canvasHeight: Int!
+  canvasWidth: Int!
+  createdAt: DateTime!
+  frames: [Frame!]!
+  gifDelayMs: Int!
+  id: ID!
+  title: String!
+  updatedAt: DateTime!
+}
+
+enum UploadKind {
+  ORIGINAL
+  PROCESSED
+}

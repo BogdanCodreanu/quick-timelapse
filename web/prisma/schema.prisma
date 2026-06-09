@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator pothos {
+  provider     = "prisma-pothos-types"
+  clientOutput = "@prisma/client"
+  output       = "../src/generated/pothos-types.ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Timelapse {
+  id           String   @id @default(uuid()) @db.Uuid
+  ownerId      String // Clerk user id
+  title        String   @default("Untitled")
+  canvasWidth  Int
+  canvasHeight Int
+  gifDelayMs   Int      @default(500)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  frames       Frame[]
+
+  @@index([ownerId, updatedAt])
+}
+
+model Frame {
+  id          String   @id @default(uuid()) @db.Uuid
+  timelapseId String   @db.Uuid
+  timelapse   Timelapse @relation(fields: [timelapseId], references: [id], onDelete: Cascade)
+  orderIndex  Int
+  originalKey  String // S3 key of the untouched upload (never mutated)
+  processedKey String? // S3 key of the baked composite (null until first Apply)
+
+  // Transform, relative to the timelapse output canvas
+  cropX    Float?
+  cropY    Float?
+  cropW    Float?
+  cropH    Float?
+  rotation Float @default(0)
+  scale    Float @default(1)
+  offsetX  Float @default(0)
+  offsetY  Float @default(0)
+
+  // Natural pixel size of the original (EXIF-corrected)
+  width  Int?
+  height Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([timelapseId, orderIndex])
+}
